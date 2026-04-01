@@ -265,6 +265,24 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 @keyframes splashFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes splashBars{0%,100%{height:20px;opacity:.25}50%{height:34px;opacity:1;background:var(--orange)}}
 .splash-ver{position:absolute;bottom:40px;font-size:11px;color:rgba(255,255,255,.3);font-weight:600;letter-spacing:1px}
+
+/* ═══ WHATS NEW POPUP ═══ */
+.wn-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+.wn-overlay.open{display:flex;animation:oi .2s ease}
+.wn-box{background:var(--sf);border-radius:24px;width:92%;max-width:420px;max-height:80vh;overflow:hidden;animation:su .35s cubic-bezier(.32,.72,0,1);box-shadow:0 24px 80px rgba(0,0,0,.4);border:1px solid var(--bd)}
+.wn-header{background:linear-gradient(135deg,var(--purple-d),var(--purple),var(--orange));padding:28px 24px 22px;color:#fff;text-align:center;position:relative;overflow:hidden}
+.wn-header::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08)}
+.wn-header-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;backdrop-filter:blur(8px)}
+.wn-header-icon svg{width:24px;height:24px}
+.wn-header-title{font-family:var(--fh);font-size:20px;font-weight:800}
+.wn-header-ver{font-size:12px;opacity:.7;margin-top:4px;font-weight:600}
+.wn-body{padding:20px 24px;max-height:40vh;overflow-y:auto}
+.wn-item{display:flex;gap:10px;padding:8px 0;align-items:flex-start}
+.wn-bullet{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.wn-text{font-size:13px;color:var(--tx2);font-weight:500;line-height:1.5}
+.wn-footer{padding:16px 24px 20px;border-top:1px solid var(--bd)}
+.wn-btn{width:100%;padding:14px;border:none;border-radius:var(--rs);background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;cursor:pointer;transition:var(--tr);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+.wn-btn:active{transform:scale(.97)}
 </style>
 </head>
 <body data-theme="dark">
@@ -431,13 +449,34 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 <button class="bt bt1" onclick="addDx()" style="margin-top:4px">Registrar</button>
 </div></div></div>
 
+<!-- WHATS NEW POPUP -->
+<div class="wn-overlay" id="wnOverlay" onclick="if(event.target===this)closeWn()">
+  <div class="wn-box">
+    <div class="wn-header">
+      <div class="wn-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg></div>
+      <div class="wn-header-title">Novidades</div>
+      <div class="wn-header-ver" id="wnVer"></div>
+    </div>
+    <div class="wn-body" id="wnBody"></div>
+    <div class="wn-footer">
+      <button class="wn-btn" onclick="closeWn()">Entendi</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const PL={Mensal:120,Trimestral:300,Semestral:600,Anual:1200},PM={Mensal:1,Trimestral:3,Semestral:6,Anual:12};
 
 // ═══ VERSIONAMENTO ═══
-const APP_VERSION='1.9.0';
+const APP_VERSION='1.9.1';
 const APP_NAME='Be Strong Pro';
 const CHANGELOG=[
+  {ver:'1.9.1',data:'01/04/2026',tipo:'pequena',titulo:'Popup de Novidades por Versao',items:[
+    'Popup "Novidades" exibido automaticamente apos login quando a versao muda',
+    'Mostra apenas uma vez por usuario por versao (salvo em localStorage)',
+    'Se a versao for atualizada o popup aparece novamente',
+    'Design estilo card com gradiente roxo/laranja e icone de estrela'
+  ]},
   {ver:'1.9.0',data:'01/04/2026',tipo:'media',titulo:'Splash Screen + Icone + Correcao Ticket',items:[
     'Splash screen animado estilo Nubank ao abrir o app',
     'Novo icone: braco musculoso minimalista em SVG (substituiu halteres)',
@@ -942,6 +981,32 @@ function initSplash(){
   },2200);
 }
 
+// ═══ WHATS NEW ═══
+function checkWhatsNew(user){
+  try{
+    const key='bsp_seen_ver_'+user;
+    const seen=localStorage.getItem(key);
+    if(seen===APP_VERSION)return; // ja viu essa versao
+    // Pegar changelog da versao atual
+    const entry=CHANGELOG.find(c=>c.ver===APP_VERSION);
+    if(!entry)return;
+    // Montar popup
+    $('wnVer').textContent='Versao '+entry.ver+' — '+entry.data;
+    const colors={grande:'var(--red)',media:'var(--orange)',pequena:'var(--blue)'};
+    let html='';
+    entry.items.forEach(it=>{
+      html+=`<div class="wn-item"><div class="wn-bullet" style="background:${colors[entry.tipo]||'var(--purple)'}"></div><div class="wn-text">${it}</div></div>`;
+    });
+    $('wnBody').innerHTML=html;
+    // Mostrar com delay pra nao conflitar com transicao de login
+    setTimeout(()=>{$('wnOverlay').classList.add('open')},600);
+  }catch(e){}
+}
+function closeWn(){
+  $('wnOverlay').classList.remove('open');
+  try{localStorage.setItem('bsp_seen_ver_alex',APP_VERSION)}catch(e){}
+}
+
 // ═══ LOGIN (apenas Alex) ═══
 function doLogin(){
   const p=$('loginPass').value.trim();
@@ -965,6 +1030,7 @@ function doLogin(){
         $('appMain').style.display='flex';
         $('bottomNav').style.display='flex';
         rH();
+        checkWhatsNew('alex');
       },400);
     } else {
       $('loginErrorMsg').textContent='Senha incorreta';
