@@ -248,15 +248,55 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 .login-dot:nth-child(2){animation:dotPulse 1.2s ease .2s infinite}
 .login-dot:nth-child(3){animation:dotPulse 1.2s ease .4s infinite}
 @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+/* ═══ SPLASH SCREEN ═══ */
+.splash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(160deg,#0f0b1a 0%,#1a1040 30%,var(--purple-d) 70%,var(--purple) 100%);transition:opacity .5s ease,transform .5s ease}
+.splash.out{opacity:0;transform:scale(1.08);pointer-events:none}
+.splash-icon{width:100px;height:100px;border-radius:28px;background:rgba(255,255,255,.1);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;margin-bottom:24px;animation:splashPop .6s cubic-bezier(.34,1.56,.64,1) both;box-shadow:0 16px 60px rgba(0,0,0,.3)}
+.splash-icon svg{width:56px;height:56px}
+.splash-title{font-family:var(--fh);font-size:32px;font-weight:800;color:#fff;animation:splashFade .5s ease .3s both;letter-spacing:-.5px}
+.splash-title span{color:var(--orange)}
+.splash-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;animation:splashFade .5s ease .5s both;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.splash-loader{margin-top:40px;display:flex;gap:6px;animation:splashFade .5s ease .7s both}
+.splash-bar{width:4px;height:20px;border-radius:2px;background:rgba(255,255,255,.25);animation:splashBars .8s ease infinite}
+.splash-bar:nth-child(2){animation-delay:.1s}.splash-bar:nth-child(3){animation-delay:.2s}
+.splash-bar:nth-child(4){animation-delay:.3s}.splash-bar:nth-child(5){animation-delay:.4s}
+@keyframes splashPop{from{opacity:0;transform:scale(.5)rotate(-10deg)}to{opacity:1;transform:scale(1)rotate(0)}}
+@keyframes splashFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes splashBars{0%,100%{height:20px;opacity:.25}50%{height:34px;opacity:1;background:var(--orange)}}
+.splash-ver{position:absolute;bottom:40px;font-size:11px;color:rgba(255,255,255,.3);font-weight:600;letter-spacing:1px}
 </style>
 </head>
 <body data-theme="dark">
 
+<!-- ═══ SPLASH SCREEN ═══ -->
+<div class="splash" id="splashScreen">
+  <div class="splash-icon">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 44c0 0-2-6 0-14s8-14 14-16c2-.7 4 0 4 0s3-4 7-4 6 4 6 4 4-1 6 2 1 8-2 12-6 6-6 6 0 6-2 10-6 8-10 8" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M32 18c2-2 5-3 8-2" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M45 16c1.5 0 3.5 1 4 3" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="38" cy="28" r="6" stroke="#fff" stroke-width="2.5" opacity=".3"/>
+      <path d="M35 26c1-2 3-3 6-2" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+    </svg>
+  </div>
+  <div class="splash-title">Be <span>Strong</span></div>
+  <div class="splash-sub">Sistema de Gestao</div>
+  <div class="splash-loader">
+    <div class="splash-bar"></div><div class="splash-bar"></div><div class="splash-bar"></div><div class="splash-bar"></div><div class="splash-bar"></div>
+  </div>
+  <div class="splash-ver" id="splashVer"></div>
+</div>
+
 <!-- ═══ LOGIN SCREEN ═══ -->
-<div class="login-screen" id="loginScreen">
+<div class="login-screen" id="loginScreen" style="display:none">
   <div class="login-box">
     <div class="login-logo login-pulse">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6 12h12M4 8v8M8 6v12M16 6v12M20 8v8"/></svg>
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+        <path d="M20 44c0 0-2-6 0-14s8-14 14-16c2-.7 4 0 4 0s3-4 7-4 6 4 6 4 4-1 6 2 1 8-2 12-6 6-6 6 0 6-2 10-6 8-10 8" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M32 18c2-2 5-3 8-2" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M45 16c1.5 0 3.5 1 4 3" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
     </div>
     <div class="login-title">Be <span>Strong</span> Pro</div>
     <div class="login-sub">Sistema de Gestao de Academia</div>
@@ -304,7 +344,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 <!-- ═══ SIDEBAR (DESKTOP) ═══ -->
 <aside class="side">
   <div class="side-brand">
-    <div class="side-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6 12h12M4 8v8M8 6v12M16 6v12M20 8v8"/></svg></div>
+    <div class="side-logo"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path d="M20 44c0 0-2-6 0-14s8-14 14-16c2-.7 4 0 4 0s3-4 7-4 6 4 6 4 4-1 6 2 1 8-2 12-6 6-6 6 0 6-2 10-6 8-10 8" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 18c2-2 5-3 8-2M45 16c1.5 0 3.5 1 4 3" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/></svg></div>
     <div class="side-name">Be <span>Strong</span> Pro</div>
     <div class="side-sub">Sistema de Gestao</div>
   </div>
@@ -344,7 +384,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 <div class="main-wrap">
   <header class="hd">
     <div class="hd-b">
-      <div class="hd-logo hd-logo-m"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6 12h12M4 8v8M8 6v12M16 6v12M20 8v8"/></svg></div>
+      <div class="hd-logo hd-logo-m"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M20 44c0 0-2-6 0-14s8-14 14-16c2-.7 4 0 4 0s3-4 7-4 6 4 6 4 4-1 6 2 1 8-2 12-6 6-6 6 0 6-2 10-6 8-10 8" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 18c2-2 5-3 8-2" stroke="var(--orange)" stroke-width="3.5" stroke-linecap="round"/></svg></div>
       <div class="hd-t">Be <span>Strong</span> Pro</div>
     </div>
     <div class="hd-a">
@@ -395,9 +435,17 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100dvh
 const PL={Mensal:120,Trimestral:300,Semestral:600,Anual:1200},PM={Mensal:1,Trimestral:3,Semestral:6,Anual:12};
 
 // ═══ VERSIONAMENTO ═══
-const APP_VERSION='1.8.0';
+const APP_VERSION='1.9.0';
 const APP_NAME='Be Strong Pro';
 const CHANGELOG=[
+  {ver:'1.9.0',data:'01/04/2026',tipo:'media',titulo:'Splash Screen + Icone + Correcao Ticket',items:[
+    'Splash screen animado estilo Nubank ao abrir o app',
+    'Novo icone: braco musculoso minimalista em SVG (substituiu halteres)',
+    'Icone atualizado no splash, login, sidebar e header',
+    'Correcao: Ticket Medio/Aluno agora calcula equivalente mensal do plano',
+    'Ex: plano Anual R$1.200 = ticket de R$100/mes (nao R$1.200)',
+    'Criado documento de diretrizes do projeto (INSTRUCOES.md)'
+  ]},
   {ver:'1.8.0',data:'01/04/2026',tipo:'media',titulo:'Dashboard KPIs + Despesas Fixas/Variaveis',items:[
     'Despesas agora tem tipo: Fixa (recorrente) ou Variavel',
     'Despesas fixas puxam automaticamente todo mes',
@@ -563,7 +611,7 @@ function rH(){
   // KPIs
   const txEvasao=total>0?((vc/total)*100).toFixed(1):0;
   const txRenovacao=total>0?((at/total)*100).toFixed(1):0;
-  const recMedia=at>0?(tm/at):0;
+  const recMedia=at>0?(C.filter(c=>c.st==='Ativo').reduce((s,c)=>s+(PL[c.pl]/PM[c.pl]),0)/at):0;
   const freqMedia=at>0?(C.filter(c=>c.st==='Ativo').reduce((s,c)=>s+c.ci,0)/at).toFixed(1):0;
 
   // Sexo
@@ -603,7 +651,7 @@ function rH(){
   <div class="sr">
     <div class="sp"><div class="spi" style="background:var(--rbg);color:var(--red)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div><div class="spl">Taxa de Evasao</div><div class="spv" style="color:var(--red)">${txEvasao}%</div><div class="sps">${vc} de ${total} clientes</div></div>
     <div class="sp"><div class="spi" style="background:var(--gbg);color:var(--green)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="spl">Taxa de Renovacao</div><div class="spv" style="color:var(--green)">${txRenovacao}%</div><div class="sps">${at} ativos</div></div>
-    <div class="sp"><div class="spi" style="background:var(--pbg2);color:var(--purple)">${I.do}</div><div class="spl">Receita / Aluno</div><div class="spv" style="color:var(--purple)">${fv(recMedia)}</div><div class="sps">media mensal</div></div>
+    <div class="sp"><div class="spi" style="background:var(--pbg2);color:var(--purple)">${I.do}</div><div class="spl">Ticket Medio / Aluno</div><div class="spv" style="color:var(--purple)">${fv(recMedia)}</div><div class="sps">equivalente mensal</div></div>
     <div class="sp"><div class="spi" style="background:var(--obg2);color:var(--orange)">${I.ck}</div><div class="spl">Freq. Media</div><div class="spv" style="color:var(--orange)">${freqMedia}x</div><div class="sps">check-ins/aluno</div></div>
   </div>
 
@@ -875,8 +923,23 @@ function rLog(){
 }
 
 function initVersion(){
-  const el=$('sideVer');if(el)el.textContent=APP_NAME+' v'+APP_VERSION+' // Indaial/SC';
+  const v=APP_NAME+' v'+APP_VERSION;
+  const el=$('sideVer');if(el)el.textContent=v+' // Indaial/SC';
   const lv=$('loginVer');if(lv)lv.textContent='v'+APP_VERSION;
+  const sv=$('splashVer');if(sv)sv.textContent='v'+APP_VERSION;
+}
+
+// ═══ SPLASH ═══
+function initSplash(){
+  initVersion();
+  setTimeout(()=>{
+    $('splashScreen').classList.add('out');
+    setTimeout(()=>{
+      $('splashScreen').style.display='none';
+      $('loginScreen').style.display='';
+      setTimeout(()=>{$('loginPass')?.focus()},300);
+    },500);
+  },2200);
 }
 
 // ═══ LOGIN (apenas Alex) ═══
@@ -917,7 +980,7 @@ function doLogin(){
 }
 
 setTimeout(()=>{$('loginPass')?.focus()},300);
-initVersion();
+initSplash();
 </script>
 </body>
 </html>
